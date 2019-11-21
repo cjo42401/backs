@@ -16,9 +16,9 @@ dashboard.heroku.com:HSTS	0	18221	1605840682214,1,1,2
 firefox.settings.services.mozilla.com:HSTS	2	18221	1605841418335,1,0,2
 ubuntu.stackexchange.com:HSTS	0	18221	1589857600145,1,0,2
 services.addons.mozilla.org:HSTS	1	18221	1605841538342,1,0,2
-tiles.services.mozilla.com:HSTS	2	18221	1605841595565,1,0,2
+tiles.services.mozilla.com:HSTS	2	18221	1605841978941,1,0,2
 www.mozilla.org:HSTS	0	18214	1605240298438,1,0,2
-www.google.com:HSTS	2	18221	1605841697452,1,0,2
+www.google.com:HSTS	2	18221	1605841980376,1,0,2
 askubuntu.com:HSTS	1	18221	1589857629844,1,0,2
 www.facebook.com:HSTS	1	18221	1605840643198,1,1,2
 cli-auth.heroku.com:HSTS	0	18221	1637376816679,1,1,2
@@ -33,7 +33,7 @@ help.github.com:HSTS	0	18221	1589855418036,1,1,2
 contacts.google.com:HSTS	0	18221	1605840595335,1,0,2
 api.github.com:HSTS	0	18221	1605841698286,1,1,2
 github.com:HSTS	0	18221	1605840513560,1,1,2
-normandy.cdn.mozilla.net:HSTS	2	18220	1605820580738,1,0,2
+normandy.cdn.mozilla.net:HSTS	3	18221	1605842181465,1,0,2
 beap-bc.yahoo.com:HSTS	0	18221	1589857516557,1,0,2
 graph.facebook.com:HSTS	0	18221	1589857599904,1,0,2
 code.visualstudio.com:HSTS	0	18221	1605841780104,1,0,2
@@ -49,12 +49,12 @@ cdn.jsdelivr.net:HSTS	0	18220	1605755448723,1,1,2
 avatars3.githubusercontent.com:HSTS	0	18221	1605859815477,1,0,2
 fonts.googleapis.com:HSTS	3	18221	1605838109711,1,0,2
 blocklists.settings.services.mozilla.com:HSTS	1	18221	1605841658438,1,0,2
-img-getpocket.cdn.mozilla.net:HSTS	2	18221	1637377595069,1,1,2
+img-getpocket.cdn.mozilla.net:HSTS	2	18221	1637377970567,1,1,2
 staticxx.facebook.com:HSTS	0	18220	1589771449987,1,0,2
 m.stripe.network:HSTS	0	18220	1605776375606,1,1,2
 collector.githubapp.com:HSTS	0	18221	1605840513230,1,0,2
 chat-pa.clients6.google.com:HSTS	0	18221	1585191015228,1,1,2
-www.google.com^firstPartyDomain=google.search.suggestions.mozilla:HSTS	2	18221	1605841594707,1,0,2
+www.google.com^firstPartyDomain=google.search.suggestions.mozilla:HSTS	2	18221	1605841978448,1,0,2
 mscom.demdex.net:HSTS	0	18221	1605841331662,1,1,2
 files.fosswire.com:HSTS	0	18220	1605818259342,1,0,2
 ev.surveywall-api.survata.com:HSTS	0	18221	1590030400178,1,1,2
