@@ -1,0 +1,307 @@
+<div id="chapter-find" data-tralics-id="cid33" class="chapter" data-number="4" data-chapter="find"><h1><a href="find_fragment.html#chapter-find" class="heading hyperref"><span class="number">Chapter 4 </span>Find</a></h1>
+<p>In <a href="ack_ag_fragment.html#chapter-ack-ag" class="hyperref">Chapter <span class="ref">2</span></a>, we used Ack and Ag to search through a large code base to find files that contained certain query terms, but what if we want to search for files using criteria other than the file’s contents?</p>
+<p>The <code>find</code> command is just such a search tool.<span class="intersentencespace"></span> With <code>find</code> we can quickly search for files whose path, or name, contains a query term.<span class="intersentencespace"></span> We can also find files that are owned by a particular user, are of a certain size, have been last modified in the last <code>n</code> days, and much more.<span class="intersentencespace"></span> In <a href="tar_fragment.html#chapter-tar" class="hyperref">Chapter <span class="ref">8</span></a>, we’ll use <code>find</code> to generate a list of files to create an archive from.</p>
+<p>In this chapter, we’ll look at some of the most useful features of the <code>find</code> command.</p>
+<p>The source code we’ll be using for this chapter’s examples is the Rails source code as mentioned in the Preface.</p>
+</div><div id="sec-find-the-basics" data-tralics-id="cid34" class="section" data-number="4.1"><h2><a href="find_fragment.html#sec-find-the-basics" class="heading hyperref"><span class="number">4.1 </span>The Basics (<code>-name</code>)</a></h2>
+<p>The <code>find</code> command has a very basic usage format.</p>
+<div class="code"><div class="highlight"><pre>$ find PATH_TO_SEARCH OPTIONS_TO_USE PATTERN_TO_SEARCH_FOR
+</pre></div></div>
+<p>With that knowledge in place, let’s write a simple query to find all files that end in <code>model.rb</code>.</p>
+<div class="code"><div class="highlight"><pre>$ find . -name model.rb
+</pre></div></div>
+<p>As we can see in <a href="find_fragment.html#code-find-name-simple-wrong" class="hyperref">Listing <span class="ref">4.1</span></a> we are only finding files that match <code>model.rb</code> exactly.</p>
+<div class="codelisting" id="code-find-name-simple-wrong" data-tralics-id="uid128" data-number="4.1"><div class="heading"><span class="number">Listing 4.1</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./activemodel/lib/active_model/model.rb
+./activerecord/lib/rails/generators/active_record/model/templates/model.rb
+</pre></div></div></div><p>The reason is that the <code>-name</code> option is expecting a pattern to match, and the pattern we gave it used no wild cards to indicate that we want to match the end of the file’s name.</p>
+<p>Let’s change our query slightly to fix the problem.</p>
+<div class="code"><div class="highlight"><pre>$ find . -name \*model.rb
+</pre></div></div>
+<div class="codelisting" id="code-find-name-simple-right" data-tralics-id="uid129" data-number="4.2"><div class="heading"><span class="number">Listing 4.2</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./activemodel/lib/active_model/model.rb
+./activemodel/lib/active_model.rb
+./activerecord/lib/rails/generators/active_record/model/templates/model.rb
+./activerecord/test/models/arunit2_model.rb
+./railties/lib/rails/generators/active_model.rb
+</pre></div></div></div><p><a href="find_fragment.html#code-find-name-simple-right" class="hyperref">Listing <span class="ref">4.2</span></a> shows that we managed to search the current directory, <code>.</code> (and by default its sub-directories), for files whose file name ends with <code>*model.rb</code>.</p>
+<p>You’ll notice that we used <code>.</code> to represent the current directory; we could have also used the equivalent expression <code>./</code>.<span class="intersentencespace"></span> We also had to escape the <code>*</code> so that it wasn’t misinterpreted by the operating system.</p>
+</div><div id="cid35" data-tralics-id="cid35" class="section" data-number="4.2"><h2><a href="find_fragment.html#cid35" class="heading hyperref"><span class="number">4.2 </span>Searching Paths (<code>-path</code>)</a></h2>
+<p>In <a href="find_fragment.html#sec-find-the-basics" class="hyperref">Section <span class="ref">4.1</span></a> we learned how to use <code>find</code> to search for files whose name matches a pattern, but what about if we want to find files, or directories, whose path matches a pattern?</p>
+<p>To search within a path we can use the <code>-path</code> flag instead of the <code>-name</code> flag.<span class="intersentencespace"></span> Let’s try to find any files whose path contains the word <code>session</code>.</p>
+<div class="code"><div class="highlight"><pre>$ find . -path \*session\*
+</pre></div></div>
+<div class="codelisting" id="code-find-path-simple" data-tralics-id="uid130" data-number="4.3"><div class="heading"><span class="number">Listing 4.3</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./actionpack/lib/action_dispatch/middleware/session
+./actionpack/lib/action_dispatch/middleware/session/abstract_store.rb
+./actionpack/lib/action_dispatch/middleware/session/cache_store.rb
+./actionpack/lib/action_dispatch/middleware/session/cookie_store.rb
+./actionpack/lib/action_dispatch/middleware/session/mem_cache_store.rb
+./actionpack/lib/action_dispatch/request/session.rb
+./actionpack/test/dispatch/request/session_test.rb
+./actionpack/test/dispatch/session
+./actionpack/test/dispatch/session/abstract_store_test.rb
+./actionpack/test/dispatch/session/cache_store_test.rb
+./actionpack/test/dispatch/session/cookie_store_test.rb
+./actionpack/test/dispatch/session/mem_cache_store_test.rb
+./actionpack/test/dispatch/session/test_session_test.rb
+./actionpack/test/fixtures/session_autoload_test
+./actionpack/test/fixtures/session_autoload_test/session_autoload_test
+./actionpack/test/fixtures/session_autoload_test/session_autoload_test/foo.rb
+./activerecord/test/models/possession.rb
+./guides/assets/images/session_fixation.png
+./guides/code/getting_started/config/initializers/session_store.rb
+./railties/test/application/middleware/session_test.rb
+</pre></div></div></div><p><a href="find_fragment.html#code-find-path-simple" class="hyperref">Listing <span class="ref">4.3</span></a> shows the results of our query.<span class="intersentencespace"></span> The output shows us the many files and directories that contain the word <code>session</code>.</p>
+<div id="uid131" data-tralics-id="uid131" class="subsection" data-number="4.2.1"><h3><a href="find_fragment.html#uid131" class="heading hyperref"><span class="number">4.2.1 </span>Find Only Files or Directories (<code>-type</code>)</a></h3>
+<p>In <a href="find_fragment.html#code-find-path-simple" class="hyperref">Listing <span class="ref">4.3</span></a>, we wanted to find <em>files</em> whose path name contained the word <code>session</code>.<span class="intersentencespace"></span> Based on the results, however, note that directories whose names matched the pattern were also supplied.</p>
+<p>By using the <code>-type</code> flag, we can tell <code>find</code> to either look exclusively for files, <code>-type f</code>, or just directories, <code>-type d</code>.</p>
+<p>We can now alter our query to exclusively search for files whose path contains <code>session</code> so that directories are not included in the results.</p>
+<div class="code"><div class="highlight"><pre>$ find . -path \*session\* -type f
+</pre></div></div>
+<div class="codelisting" id="code-find-path-type" data-tralics-id="uid132" data-number="4.4"><div class="heading"><span class="number">Listing 4.4</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./actionpack/lib/action_dispatch/middleware/session/abstract_store.rb
+./actionpack/lib/action_dispatch/middleware/session/cache_store.rb
+./actionpack/lib/action_dispatch/middleware/session/cookie_store.rb
+./actionpack/lib/action_dispatch/middleware/session/mem_cache_store.rb
+./actionpack/lib/action_dispatch/request/session.rb
+./actionpack/test/dispatch/request/session_test.rb
+./actionpack/test/dispatch/session/abstract_store_test.rb
+./actionpack/test/dispatch/session/cache_store_test.rb
+./actionpack/test/dispatch/session/cookie_store_test.rb
+./actionpack/test/dispatch/session/mem_cache_store_test.rb
+./actionpack/test/dispatch/session/test_session_test.rb
+./actionpack/test/fixtures/session_autoload_test/session_autoload_test/foo.rb
+./activerecord/test/models/possession.rb
+./guides/assets/images/session_fixation.png
+./guides/code/getting_started/config/initializers/session_store.rb
+./railties/test/application/middleware/session_test.rb
+</pre></div></div></div><p>Similarly, we can also search for directories whose path contains <code>session</code>.</p>
+<div class="code"><div class="highlight"><pre>$ find . -path \*session\* -type d
+</pre></div></div>
+<div class="codelisting" id="code-find-path-type-dir" data-tralics-id="uid133" data-number="4.5"><div class="heading"><span class="number">Listing 4.5</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./actionpack/lib/action_dispatch/middleware/session
+./actionpack/test/dispatch/session
+./actionpack/test/fixtures/session_autoload_test
+./actionpack/test/fixtures/session_autoload_test/session_autoload_test
+</pre></div></div></div></div></div><div id="cid36" data-tralics-id="cid36" class="section" data-number="4.3"><h2><a href="find_fragment.html#cid36" class="heading hyperref"><span class="number">4.3 </span>And/Or Expressions (<code>-or</code>)</a></h2>
+<p>We can further refine our search from <a href="find_fragment.html#code-find-path-type" class="hyperref">Listing <span class="ref">4.4</span></a> to find only files whose path name contains <code>session</code> and whose file name contains <code>mem</code>.</p>
+<div class="code"><div class="highlight"><pre>$ find . -path \*session\* -type f -name \*mem\*
+</pre></div></div>
+<div class="codelisting" id="code-find-path-type-name" data-tralics-id="uid134" data-number="4.6"><div class="heading"><span class="number">Listing 4.6</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./actionpack/lib/action_dispatch/middleware/session/mem_cache_store.rb
+./actionpack/test/dispatch/session/mem_cache_store_test.rb
+</pre></div></div></div><p>As <a href="find_fragment.html#code-find-path-type-name" class="hyperref">Listing <span class="ref">4.6</span></a> shows, we can combine both the <code>-name</code> and the <code>-path</code> flags together to make our search very specific.<span class="intersentencespace"></span> This type of query is an <code>AND</code> query.<span class="intersentencespace"></span> Both flags have to match for the file to be included in the results.</p>
+<p>We can also do <code>OR</code> queries in <code>find</code> using the <code>-or</code> operator and some well placed parentheses.</p>
+<p>Let’s write a query that will find files whose name either ends in <code>.gemspec</code> or in <code>.jpg</code>.</p>
+<div class="code"><div class="highlight"><pre>$ find . \( -name \*.gemspec -or -name \*.jpg \) -type f
+</pre></div></div>
+<div class="codelisting" id="code-find-or-query" data-tralics-id="uid135" data-number="4.7"><div class="heading"><span class="number">Listing 4.7</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./actionmailer/actionmailer.gemspec
+./actionmailer/test/fixtures/attachments/foo.jpg
+./actionmailer/test/fixtures/attachments/test.jpg
+./actionpack/actionpack.gemspec
+./actionpack/test/fixtures/multipart/mona_lisa.jpg
+./actionview/actionview.gemspec
+./activemodel/activemodel.gemspec
+./activerecord/activerecord.gemspec
+./activerecord/test/assets/flowers.jpg
+./activesupport/activesupport.gemspec
+./guides/assets/images/akshaysurve.jpg
+./guides/assets/images/oscardelben.jpg
+./guides/assets/images/rails_guides_kindle_cover.jpg
+./guides/assets/images/vijaydev.jpg
+./rails.gemspec
+./railties/lib/rails/generators/rails/plugin/templates/%name%.gemspec
+./railties/railties.gemspec
+</pre></div></div></div><p>It’s important to remember to properly escape characters such as parentheses and asterisks as to not confuse the operating system.<span class="intersentencespace"></span> Most of the problems you’ll run into with queries such as this is improper escaping, so make sure to keep an eye out for it.</p>
+</div><div id="sec-not-matching-query" data-tralics-id="cid37" class="section" data-number="4.4"><h2><a href="find_fragment.html#sec-not-matching-query" class="heading hyperref"><span class="number">4.4 </span>Not Matching Query (<code>!</code>, <code>-not</code>)</a></h2>
+<p>Up until this point, we have been searching for files whose names or paths match a certain pattern.<span class="intersentencespace"></span> Now, let’s do the opposite.<span class="intersentencespace"></span> We can query for files, or directories, that <em>don’t</em> match a certain pattern.</p>
+<p>Let’s say we want to find all of the files in our directory that don’t contain the letter <code>t</code> somewhere in their path.</p>
+<p>To do that we can use the <code>-not</code> operator in front of the <code>-path</code> flag.</p>
+<div class="code"><div class="highlight"><pre>$ find . -not -path \*t\* -type f
+</pre></div></div>
+<div class="codelisting" id="code-find-not-simple" data-tralics-id="uid136" data-number="4.8"><div class="heading"><span class="number">Listing 4.8</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./CONTRIBUTING.md
+./Gemfile
+./guides/CHANGELOG.md
+./guides/rails_guides/helpers.rb
+./guides/rails_guides/indexer.rb
+./guides/rails_guides/kindle.rb
+./guides/rails_guides/markdown/renderer.rb
+./guides/rails_guides/markdown.rb
+./guides/rails_guides.rb
+./guides/Rakefile
+./guides/source/command_line.md
+./guides/source/configuring.md
+./guides/source/engines.md
+./guides/source/form_helpers.md
+./guides/source/i18n.md
+./guides/source/kindle/KINDLE.md
+./guides/source/kindle/rails_guides.opf.erb
+./guides/source/plugins.md
+./guides/source/rails_on_rack.md
+./guides/source/ruby_on_rails_guides_guidelines.md
+./guides/source/upgrading_ruby_on_rails.md
+./rails.gemspec
+./RAILS_VERSION
+./Rakefile
+./README.md
+./RELEASING_RAILS.rdoc
+./version.rb
+</pre></div></div></div><p>Another way to achieve the same result set as <a href="find_fragment.html#code-find-not-simple" class="hyperref">Listing <span class="ref">4.8</span></a> is to use <code>!</code> instead of the <code>-not</code> operator.<span class="intersentencespace"></span> They will both give you the same results, but I personally prefer the <code>!</code> variant.</p>
+<div class="code"><div class="highlight"><pre>$ find . \! -path \*t\* -type f
+</pre></div></div>
+</div><div id="cid38" data-tralics-id="cid38" class="section" data-number="4.5"><h2><a href="find_fragment.html#cid38" class="heading hyperref"><span class="number">4.5 </span>Find by Last Modified Time (<code>-mtime</code>)</a></h2>
+<p><code>find</code> allows us to search for files and directories in many different ways.<span class="intersentencespace"></span> Up until now, we’ve been focused on the name of the file or the path of the file, but what about searching for files based on their last modified date?</p>
+<p>Using the <code>-mtime</code> flag we can search for files whose last modified date was in the last <code>n</code> days.</p>
+<p>Here we can find files who have been modified in the last day.</p>
+<div class="code"><div class="highlight"><pre>$ find . -mtime -1
+</pre></div></div>
+<div class="codelisting" id="code-find-mtime-simple" data-tralics-id="uid137" data-number="4.9"><div class="heading"><span class="number">Listing 4.9</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./actionpack/lib/abstract_controller.rb
+./ci/travis.rb
+./Gemfile
+./railties/test/engine_test.rb
+</pre></div></div></div><p>The number we pass to the <code>-mtime</code> flag, in this case <code>-1</code>, is the number of days we are interested in.<span class="intersentencespace"></span> This example returns files that have been modified in the last 24 hours.<span class="intersentencespace"></span> An option of <code>-2</code> would represent the last 48 hours and so on.</p>
+<p>Using the <code>-mmin</code> flag we can look for files that have been modified in the last <code>n</code> minutes.</p>
+<div class="code"><div class="highlight"><pre>$ find . -mmin -5
+</pre></div></div>
+<div class="codelisting" id="code-find-mmin-simple" data-tralics-id="uid138" data-number="4.10"><div class="heading"><span class="number">Listing 4.10</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./ci/travis.rb
+</pre></div></div></div></div><div id="cid39" data-tralics-id="cid39" class="section" data-number="4.6"><h2><a href="find_fragment.html#cid39" class="heading hyperref"><span class="number">4.6 </span>Find by File Size (<code>-size</code>)</a></h2>
+<p>Another useful flag is <code>-size</code>, which, as its name states, allows us to look for files whose size is over the specified amount.</p>
+<p>Let’s do a search for files whose size is greater than 200 kilobytes.</p>
+<div class="code"><div class="highlight"><pre>$ find . -size +200k
+</pre></div></div>
+<div class="codelisting" id="code-find-size-simple" data-tralics-id="uid139" data-number="4.11"><div class="heading"><span class="number">Listing 4.11</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./.git/index
+./.git/objects/pack/pack-3fc5fb51b38dba971962c3dfe13c643c7c3ff357.pack
+./.git/objects/pack/pack-a93c0c2849d6dba30ddb4a967548b955005ecbf1.idx
+./.git/objects/pack/pack-a93c0c2849d6dba30ddb4a967548b955005ecbf1.pack
+./actionview/test/template/date_helper_test.rb
+./activesupport/lib/active_support/values/unicode_tables.dat
+</pre></div></div></div><p>If we don’t want to see those files that are under the <code>.git</code> directory we can use the <code>!</code> operator we learned about in <a href="find_fragment.html#sec-not-matching-query" class="hyperref">Section <span class="ref">4.4</span></a> to remove them.</p>
+<div class="code"><div class="highlight"><pre>$ find . \! -path '*/\.*' -size +200k
+</pre></div></div>
+<div class="codelisting" id="code-find–size-no-git" data-tralics-id="uid140" data-number="4.12"><div class="heading"><span class="number">Listing 4.12</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./actionview/test/template/date_helper_test.rb
+./activesupport/lib/active_support/values/unicode_tables.dat
+</pre></div></div></div><p><a href="find_fragment.html#table-size-modifiers" class="hyperref">Table <span class="ref">4.1</span></a> shows the different modifiers we can add to the <code>-size</code> number to specify the size of the files we want to look for.</p>
+<div id="table-size-modifiers" data-tralics-id="uid141" data-number="4.1" class="table"><table class="tabular"><tr class="top_border bottom_border"><td class="left_border align_left right_border"><strong>modifier</strong></td>
+<td class="align_left right_border"><strong>size</strong></td>
+<td class="align_left right_border"><strong>actual size</strong></td>
+</tr><tr><td class="left_border align_left right_border">k</td>
+<td class="align_left right_border">kilobytes</td>
+<td class="align_left right_border">(1024 bytes)</td>
+</tr><tr><td class="left_border align_left right_border">M</td>
+<td class="align_left right_border">megabytes</td>
+<td class="align_left right_border">(1024 kilobytes)</td>
+</tr><tr><td class="left_border align_left right_border">G</td>
+<td class="align_left right_border">gigabytes</td>
+<td class="align_left right_border">(1024 megabytes)</td>
+</tr><tr><td class="left_border align_left right_border">T</td>
+<td class="align_left right_border">terabytes</td>
+<td class="align_left right_border">(1024 gigabytes)</td>
+</tr><tr class="bottom_border"><td class="left_border align_left right_border">P</td>
+<td class="align_left right_border">petabytes</td>
+<td class="align_left right_border">(1024 terabytes)</td>
+</tr></table><div class="caption"><span class="header">Table 4.1: </span><span class="description">Modifiers for <span class="tt">-size</span>
+</span></div></div>
+</div><div id="cid40" data-tralics-id="cid40" class="section" data-number="4.7"><h2><a href="find_fragment.html#cid40" class="heading hyperref"><span class="number">4.7 </span>Performing Operations (<code>-delete</code>)</a></h2>
+<p>The <code>find</code> tool also has the built-in ability to execute certain commands.<span class="intersentencespace"></span> One of the more useful built-in commands is the <code>-delete</code> flag.</p>
+<p>The <code>-delete</code> flag will, as its name suggests, delete all files and directories that match the pattern.<span class="intersentencespace"></span> This makes this type of operation incredibly efficient as we can combine the finding and deleting into one operation instead of two.</p>
+<p>Let’s find all of the files whose name ends with <code>.yml</code> and delete them from our repository.<span class="intersentencespace"></span> Here I’m also using the <code>-print</code> flag to show the files that will be deleted.</p>
+<div class="code"><div class="highlight"><pre>$ find ./guides -type f -name \*.yml -print -delete
+</pre></div></div>
+<div class="codelisting" id="code-find-delete-example" data-tralics-id="uid142" data-number="4.13"><div class="heading"><span class="number">Listing 4.13</span> <span class="description"></span>
+
+
+</div>
+
+<div class="code"><div class="highlight"><pre>./guides/code/getting_started/config/database.yml
+./guides/code/getting_started/config/locales/en.yml
+./guides/code/getting_started/test/fixtures/comments.yml
+./guides/code/getting_started/test/fixtures/posts.yml
+</pre></div></div></div><p>We can verify that the <code>-delete</code> was performed by running the find command and seeing that no matches are found.</p>
+<div class="code"><div class="highlight"><pre>$ find ./guides -type f -name \*.yml
+</pre></div></div>
+</div><div id="cid41" data-tralics-id="cid41" class="section" data-number="4.8"><h2><a href="find_fragment.html#cid41" class="heading hyperref"><span class="number">4.8 </span>Conclusion</a></h2>
+<p>We’ve covered a lot of what <code>find</code> can do in this chapter, but it is capable of significantly more.<span class="intersentencespace"></span> There is not enough space here to cover all of the different flags, options, and ways to find the files you are looking for, but hopefully this has given you a feel for what this indispensable tool can accomplish.</p>
+<p>For further evidence of how useful <code>find</code> is, see <a href="tar_fragment.html#chapter-tar" class="hyperref">Chapter <span class="ref">8</span></a> <a href="tar_fragment.html#sec-tar-find" class="hyperref">Section <span class="ref">8.2.3</span></a> where we use <code>find</code> to build a list of files to build a <code>tar</code> archive.</p>
+</div>uO��z      ]԰V]԰WA	�k]���  \    a,:https://softcover.s3-us-west-2.amazonaws.com/8/unix_commands/html/find_fragment.html?X-Amz-Expires=432000&X-Amz-Date=20191120T031048Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJMNNDDBSYVXVHGAA/20191120/us-west-2/s3/aws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=439c1333a926a8b2b135fe8b591d7cce20ea63228ceea79902430bf5bd9d6baa necko:classified 1 strongly-framed 1 security-info FnhllAKWRHGAlo+ESXykKAAAAAAAAAAAwAAAAAAAAEaphjojH6pBabDSgSnsfLHeAAAAAgAAAAAAAAAAAAAAAAAAAAEAMQFmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAgsMIIIKDCCBxCgAwIBAgIQC5Q5DoK0dXL+s+m/eW4cvjANBgkqhkiG9w0BAQsFADBkMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29tMSMwIQYDVQQDExpEaWdpQ2VydCBCYWx0aW1vcmUgQ0EtMiBHMjAeFw0xOTExMDkwMDAwMDBaFw0yMDEyMTAxMjAwMDBaMHYxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdTZWF0dGxlMRkwFwYDVQQKExBBbWF6b24uY29tLCBJbmMuMSUwIwYDVQQDDBwqLnMzLXVzLXdlc3QtMi5hbWF6b25hd3MuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoIPmoxt0wxt+KDlawWSlUCv+5ZSsQzdGvbmzTF1DJY7x66TjBjgUVmAHrAffSk9tjaavTB9C0gwDRduKm0dtc3ZRrPE5xtQTGbC11fohzplaO4jDo4zJgr/XdwFervuxIuocoSFDBoNybLB3vvuaqUlSOzJEVOu32bEH4578WIMJDuH5llA2J4k355YjFYbaABUCNYESRfsOfQDmHVKQk33cYIbCGuPbTBooL5Pf4w3pJXRceehKORBc8kcl11LmC9Itx/Xwd8gN4QgW0SuMbqctaNeXNZvmZRKSRZsebeFB3kG1hJB0DKE47sYXHAIj4ymGDoXg+mGaI2l5qi22eQIDAQABo4IEwjCCBL4wHwYDVR0jBBgwFoAUwBKyKHRoRmfpcCV0GgBFWwZ9XEQwHQYDVR0OBBYEFAKqrgVLKHKXsDQXdFSzcUeAHviyMIIB6QYDVR0RBIIB4DCCAdyCGnMzLXVzLXdlc3QtMi5hbWF6b25hd3MuY29tghwqLnMzLXVzLXdlc3QtMi5hbWF6b25hd3MuY29tghpzMy51cy13ZXN0LTIuYW1hem9uYXdzLmNvbYIcKi5zMy51cy13ZXN0LTIuYW1hem9uYXdzLmNvbYIkczMuZHVhbHN0YWNrLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tgiYqLnMzLmR1YWxzdGFjay51cy13ZXN0LTIuYW1hem9uYXdzLmNvbYISKi5zMy5hbWF6b25hd3MuY29tgiQqLnMzLWNvbnRyb2wudXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CInMzLWNvbnRyb2wudXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CLiouczMtY29udHJvbC5kdWFsc3RhY2sudXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CLHMzLWNvbnRyb2wuZHVhbHN0YWNrLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tgigqLnMzLWFjY2Vzc3BvaW50LnVzLXdlc3QtMi5hbWF6b25hd3MuY29tgjIqLnMzLWFjY2Vzc3BvaW50LmR1YWxzdGFjay51cy13ZXN0LTIuYW1hem9uYXdzLmNvbTAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMIGBBgNVHR8EejB4MDqgOKA2hjRodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vRGlnaUNlcnRCYWx0aW1vcmVDQS0yRzIuY3JsMDqgOKA2hjRodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vRGlnaUNlcnRCYWx0aW1vcmVDQS0yRzIuY3JsMEwGA1UdIARFMEMwNwYJYIZIAYb9bAEBMCowKAYIKwYBBQUHAgEWHGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9DUFMwCAYGZ4EMAQICMHkGCCsGAQUFBwEBBG0wazAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29tMEMGCCsGAQUFBzAChjdodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRCYWx0aW1vcmVDQS0yRzIuY3J0MAwGA1UdEwEB/wQCMAAwggEDBgorBgEEAdZ5AgQCBIH0BIHxAO8AdgCkuQmQtBhYFIe7E6LMZ3AKPDWYBPkb37jjd80OyA3cEAAAAW5Ng4m/AAAEAwBHMEUCIQDKHR+4+sNDXX+GpAyxF1OkxhFYEo1vrmmusDKZWKHSMgIgc69zk4EGs9jo0rpcxz7J2FqzuCgB3TbCGtD+F9548uUAdQBep3P531bA57U2SH3QSeAyepGaDIShEhKEGHWWgXFFWAAAAW5Ng4k2AAAEAwBGMEQCIHW19y7ac4juTYIVAKeh72RsfSilIT+SE0DA1gv0bDwYAiADaswu0x9UzXHNpeWJcOhDLz9GGFB4OL/vbv2rv0QWNDANBgkqhkiG9w0BAQsFAAOCAQEAThGGbv7JTQTLav1K5uhYqZnmEvKNzILQ+06Zs4QwtFvumRD5KYqGENuYavw8KkECnS5DsvJx4yfwBcAbFP2QIIW/NnjQciCaVxT+hgkvpJ5b94EcNZZ/F7Ru1XMEWfI0Y82nvcq72ICJLPkQO9w9mytz8R4gagv2zGNwlGsmbdbq9RO1Q2wty/KvgXAL02bHaR5TMn+/AQ/YluedfhfQ/89AetnuQsZq+syb4yVfmubfGQRlhuWB7MoRRK+ve/wj5bHlrz/MNvqy4+JMzxO8nY+lOaGe1iHowfrgYnmU5Vn+0haxBUKuVjMnw0zLN8zopj2tx0VgG/ZF1dMV+6jIYcAvAAMAAAAAAQEAAAAAAAAEUDI1NgAAABBSU0EtUEtDUzEtU0hBMjU2AZWfsWVlF0h/q5vYkTvlMZeudM2lzS9HP5b18Lf/9ixoAAAAA2YKMiaRXE/7uyCJhaYy3wW9w5eaVCJM1YWJaWtuluqDAAAAAAAACCwwgggoMIIHEKADAgECAhALlDkOgrR1cv6z6b95bhy+MA0GCSqGSIb3DQEBCwUAMGQxCzAJBgNVBAYTAlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xIzAhBgNVBAMTGkRpZ2lDZXJ0IEJhbHRpbW9yZSBDQS0yIEcyMB4XDTE5MTEwOTAwMDAwMFoXDTIwMTIxMDEyMDAwMFowdjELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1NlYXR0bGUxGTAXBgNVBAoTEEFtYXpvbi5jb20sIEluYy4xJTAjBgNVBAMMHCouczMtdXMtd2VzdC0yLmFtYXpvbmF3cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCgg+ajG3TDG34oOVrBZKVQK/7llKxDN0a9ubNMXUMljvHrpOMGOBRWYAesB99KT22Npq9MH0LSDANF24qbR21zdlGs8TnG1BMZsLXV+iHOmVo7iMOjjMmCv9d3AV6u+7Ei6hyhIUMGg3JssHe++5qpSVI7MkRU67fZsQfjnvxYgwkO4fmWUDYniTfnliMVhtoAFQI1gRJF+w59AOYdUpCTfdxghsIa49tMGigvk9/jDekldFx56Eo5EFzyRyXXUuYL0i3H9fB3yA3hCBbRK4xupy1o15c1m+ZlEpJFmx5t4UHeQbWEkHQMoTjuxhccAiPjKYYOheD6YZojaXmqLbZ5AgMBAAGjggTCMIIEvjAfBgNVHSMEGDAWgBTAErIodGhGZ+lwJXQaAEVbBn1cRDAdBgNVHQ4EFgQUAqquBUsocpewNBd0VLNxR4Ae+LIwggHpBgNVHREEggHgMIIB3IIaczMtdXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CHCouczMtdXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CGnMzLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tghwqLnMzLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tgiRzMy5kdWFsc3RhY2sudXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CJiouczMuZHVhbHN0YWNrLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tghIqLnMzLmFtYXpvbmF3cy5jb22CJCouczMtY29udHJvbC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbYIiczMtY29udHJvbC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbYIuKi5zMy1jb250cm9sLmR1YWxzdGFjay51cy13ZXN0LTIuYW1hem9uYXdzLmNvbYIsczMtY29udHJvbC5kdWFsc3RhY2sudXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CKCouczMtYWNjZXNzcG9pbnQudXMtd2VzdC0yLmFtYXpvbmF3cy5jb22CMiouczMtYWNjZXNzcG9pbnQuZHVhbHN0YWNrLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tMA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwgYEGA1UdHwR6MHgwOqA4oDaGNGh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEJhbHRpbW9yZUNBLTJHMi5jcmww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 request-method GET request-Origin http://conqueringthecommandline.com response-head HTTP/1.1 200 OK
+x-amz-id-2: ugoQqidWDwfBIa9UqMDQf1JwTXMm8rh1jAlJRL5wM6KaAbl1zw8rVG2/10RQEdVxrvcdOpA6Rcs=
+x-amz-request-id: E05066F64599D480
+Date: Wed, 20 Nov 2019 03:17:43 GMT
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Max-Age: 3000
+Vary: Origin, Access-Control-Request-Headers, Access-Control-Request-Method
+Last-Modified: Tue, 01 Apr 2014 19:49:20 GMT
+ETag: "b3680b88cb5a0d5ea7849700b88d350c"
+Accept-Ranges: bytes
+Content-Type: text/html
+Content-Length: 23362
+Server: AmazonS3
+ original-response-headers x-amz-id-2: ugoQqidWDwfBIa9UqMDQf1JwTXMm8rh1jAlJRL5wM6KaAbl1zw8rVG2/10RQEdVxrvcdOpA6Rcs=
+x-amz-request-id: E05066F64599D480
+Date: Wed, 20 Nov 2019 03:17:43 GMT
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Max-Age: 3000
+Vary: Origin, Access-Control-Request-Headers, Access-Control-Request-Method
+Last-Modified: Tue, 01 Apr 2014 19:49:20 GMT
+ETag: "b3680b88cb5a0d5ea7849700b88d350c"
+Accept-Ranges: bytes
+Content-Type: text/html
+Content-Length: 23362
+Server: AmazonS3
+ ctid 1 eTLD1Access 1;0;510847984, uncompressed-len 0 net-response-time-onstart 409 net-response-time-onstop 500   [B
