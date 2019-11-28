@@ -21,6 +21,7 @@ user_pref("browser.search.region", "US");
 user_pref("extensions.blocklist.pingCountVersion", 0);
 user_pref("extensions.databaseSchema", 27);
 user_pref("extensions.getAddons.databaseSchema", 5);
+user_pref("extensions.lastAppBuildId", "20191007090452");
 user_pref("extensions.lastAppVersion", "60.9.0");
 user_pref("extensions.lastPlatformVersion", "60.9.0");
 user_pref("extensions.pendingOperations", false);

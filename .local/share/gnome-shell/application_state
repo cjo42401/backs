@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
 <application-state>
   <context id="">
-    <application id="code_code.desktop" open-window-count="0" score="6" last-seen="1574306100"/>
-    <application id="gnome-terminal.desktop" open-window-count="0" score="0" last-seen="0"/>
-    <application id="org.gnome.Terminal.desktop" open-window-count="1" score="3092" last-seen="1574307264"/>
-    <application id="firefox.desktop" open-window-count="1" score="11984" last-seen="1574307367"/>
-    <application id="thunderbird.desktop" open-window-count="0" score="0" last-seen="1574306601"/>
+    <application id="org.gnome.Terminal.desktop" open-window-count="1" score="1" last-seen="1574960497"/>
+    <application id="firefox.desktop" open-window-count="2" score="14606" last-seen="1574960491"/>
+    <application id="thunderbird.desktop" open-window-count="0" score="0" last-seen="1574942208"/>
   </context>
 </application-state>

@@ -97,3 +97,45 @@ cd my_first_rails_app
 ls
 code .
 code --verbose
+sudo snap install --classic code
+sudo apt install ./<file>.deb
+ls
+cd odin_on_rails
+ls
+cd my_first_rails_app
+la
+code .
+cd hpome
+cd home
+cd directory
+cd
+bundle install --without production
+cd odin_on_rails/my_first_rails_app
+bundle install --without production
+git status
+cd
+git status
+git add .
+git commit -m 'updates for heroku deployment'
+git push origin master
+~/odin_on_rails/my_first_rails_app
+ls
+git add .
+git commit -m 'updates for heroku deployment'
+git push origin master
+Verify remote name / address
+git remote -v
+git push myOrigin master
+git remote add origin <repo_url>
+git remote add origin git@github.com:cjo42401/backs.git
+git pull origin <branch>
+git push origin master
+git push heroku master
+heroku run rails db:migrate
+git pull --rebase
+git push -f origin master
+heroku run rails db:migrate
+git add .
+git commit -m 'updates for heroku deployment'
+git push origin master
+git push heroku master
